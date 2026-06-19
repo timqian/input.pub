@@ -22,7 +22,7 @@
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
   /* Roomy horizontal gutter so the left block handles stay inside the page. */
-  padding: 48px 76px;
+  padding: 48px 96px;
   display: flex;
 }
 /* Editor fills the sheet so the whole page is a writing surface. */
