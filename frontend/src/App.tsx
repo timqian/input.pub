@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Editor, type EditorHandle } from './components/Editor'
 import { destinations, type Destination } from './destinations'
 import {
@@ -19,7 +19,31 @@ function App() {
 
   const [status, setStatus] = useState<Status>(null)
   const [busy, setBusy] = useState<string | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [configFor, setConfigFor] = useState<Destination | null>(null)
+  const publishRef = useRef<HTMLDivElement>(null)
+
+  // Close the publish menu on outside click / Escape.
+  useEffect(() => {
+    if (!menuOpen) return
+    const onDown = (e: MouseEvent) => {
+      if (!publishRef.current?.contains(e.target as Node)) setMenuOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false)
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [menuOpen])
+
+  // Auto-dismiss the status toast.
+  useEffect(() => {
+    if (!status) return
+    const t = setTimeout(() => setStatus(null), 3500)
+    return () => clearTimeout(t)
+  }, [status])
 
   const ctxFor = (dest: Destination) => ({
     getConfig: (key: string) => getConfig(dest.id, key),
@@ -47,46 +71,55 @@ function App() {
     }
   }
 
-  function handleClick(dest: Destination) {
+  function pick(dest: Destination) {
+    setMenuOpen(false)
     if (!isConfigured(dest)) setConfigFor(dest)
     else void run(dest)
   }
 
   return (
     <div className="app">
-      <header className="topbar">
-        <span className="brand">input.pub</span>
-        <span className="tagline">input here, publish anywhere</span>
-      </header>
-
-      <main className="main">
-        <Editor ref={editorRef} defaultValue={initialDraft} onChange={persist} />
-      </main>
-
-      <footer className="dock">
-        <div className="targets">
-          {destinations.map((dest) => (
-            <button
-              key={dest.id}
-              type="button"
-              className="target"
-              title={dest.hint}
-              disabled={busy !== null}
-              onClick={() => handleClick(dest)}
-            >
-              <span className="target-icon">{dest.icon}</span>
-              <span className="target-name">
-                {busy === dest.id ? '…' : dest.name}
-              </span>
-            </button>
-          ))}
-        </div>
-        {status && (
-          <div className={`status ${status.kind}`} role="status">
-            {status.text}
+      <div className="publish" ref={publishRef}>
+        <button
+          type="button"
+          className="publish-btn"
+          disabled={busy !== null}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          {busy ? '发布中…' : 'Publish'}
+        </button>
+        {menuOpen && (
+          <div className="publish-menu" role="menu">
+            {destinations.map((dest) => (
+              <button
+                key={dest.id}
+                type="button"
+                role="menuitem"
+                className="publish-item"
+                title={dest.hint}
+                onClick={() => pick(dest)}
+              >
+                <span className="publish-item-icon">{dest.icon}</span>
+                <span className="publish-item-name">{dest.name}</span>
+              </button>
+            ))}
           </div>
         )}
-      </footer>
+      </div>
+
+      <main className="sheet-area">
+        <div className="sheet">
+          <Editor ref={editorRef} defaultValue={initialDraft} onChange={persist} />
+        </div>
+      </main>
+
+      {status && (
+        <div className={`toast ${status.kind}`} role="status">
+          {status.text}
+        </div>
+      )}
 
       {configFor && (
         <ConfigDialog

@@ -1,98 +1,131 @@
 .app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-/* Top bar */
-.topbar {
-  flex: none;
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  padding: 0.7rem 1.1rem;
-  border-bottom: 1px solid var(--line);
-}
-.brand {
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.tagline {
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
-/* Editor area */
-.main {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
+/* ---- A4 sheet ---- */
+.sheet-area {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 2.5rem 1rem;
   display: flex;
   justify-content: center;
+  background: var(--backdrop);
 }
-.editor {
+.sheet {
   width: 100%;
-  max-width: 760px;
+  max-width: 794px; /* A4 width @96dpi */
+  min-height: 1123px; /* A4 height @96dpi */
+  height: max-content;
+  background: var(--paper);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 12px 32px rgba(0, 0, 0, 0.1);
+  padding: 64px 72px;
 }
-.editor .milkdown {
-  height: 100%;
+.sheet .milkdown {
+  background: transparent;
 }
 
-/* Bottom dock with targets */
-.dock {
-  flex: none;
-  border-top: 1px solid var(--line);
-  padding: 0.6rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
+@media (max-width: 640px) {
+  .sheet-area {
+    padding: 0;
+  }
+  .sheet {
+    min-height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 3.5rem 1.25rem 2rem;
+  }
 }
-.targets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
+
+/* ---- Publish button (top-right) ---- */
+.publish {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 40;
 }
-.target {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--line);
+.publish-btn {
+  padding: 0.5rem 1.1rem;
+  border: none;
   border-radius: 999px;
-  background: var(--surface);
-  color: inherit;
-  font-size: 0.85rem;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: opacity 0.15s, transform 0.05s;
 }
-.target:hover:not(:disabled) {
-  border-color: var(--accent);
+.publish-btn:hover:not(:disabled) {
+  opacity: 0.92;
 }
-.target:disabled {
-  opacity: 0.5;
+.publish-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.publish-btn:disabled {
+  opacity: 0.6;
   cursor: default;
 }
-.target-icon {
-  font-size: 1rem;
-  line-height: 1;
-}
 
-/* Status line */
-.status {
-  font-size: 0.8rem;
+.publish-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 180px;
+  padding: 0.35rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.publish-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.publish-item:hover {
+  background: var(--hover);
+}
+.publish-item-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  width: 1.4rem;
   text-align: center;
 }
-.status.ok {
-  color: var(--accent);
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
-.status.error {
-  color: #d93636;
+.toast.ok {
+  background: #2c8a4a;
+}
+.toast.error {
+  background: #d93636;
 }
 
-/* Config dialog */
+/* ---- Config dialog ---- */
 .overlay {
   position: fixed;
   inset: 0;

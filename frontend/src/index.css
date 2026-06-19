@@ -1,6 +1,9 @@
 :root {
   --bg: #ffffff;
-  --surface: #fafafa;
+  --surface: #ffffff;
+  --backdrop: #f0f0f3;
+  --paper: #ffffff;
+  --hover: #f2f2f5;
   --text: #1a1a1a;
   --muted: #8a8a8a;
   --line: #e6e6e6;
@@ -18,6 +21,9 @@
   :root {
     --bg: #16171d;
     --surface: #1f2028;
+    --backdrop: #0e0f13;
+    --paper: #1b1c22;
+    --hover: #2a2c36;
     --text: #f3f4f6;
     --muted: #9ca3af;
     --line: #2e303a;
