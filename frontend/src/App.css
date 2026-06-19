@@ -7,7 +7,7 @@
 .sheet-area {
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 2.5rem 1rem;
+  padding: 5rem 1rem; /* extra 10px above the sheet */
   display: flex;
   justify-content: center;
   background: var(--backdrop);
@@ -22,7 +22,7 @@
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
   /* Roomy horizontal gutter so the left block handles stay inside the page. */
-  padding: 48px 96px;
+  padding: 48px 92px;
   display: flex;
 }
 /* Editor fills the sheet so the whole page is a writing surface. */
@@ -60,7 +60,7 @@
   z-index: 40;
 }
 .publish-btn {
-  padding: 0.5rem 1.1rem;
+  padding: 0.3rem 1rem;
   border: 1px solid var(--btn-bg);
   border-radius: 6px;
   background: var(--btn-bg);
