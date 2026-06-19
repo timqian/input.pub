@@ -17,4 +17,4 @@ npm run dev
 
 ## Deploy
 
-Pushes to `main` auto-deploy to GitHub Pages via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), served at [input.pub](https://input.pub).
+Pushes to `main` auto-deploy to GitHub Pages via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), served at [timqian.github.io/input.pub](https://timqian.github.io/input.pub/).
