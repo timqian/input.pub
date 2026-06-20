@@ -20,6 +20,7 @@ function App() {
   const [status, setStatus] = useState<Status>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [configFor, setConfigFor] = useState<Destination | null>(null)
   const publishRef = useRef<HTMLDivElement>(null)
 
@@ -79,38 +80,52 @@ function App() {
 
   return (
     <div className="app">
-      <div className="publish" ref={publishRef}>
-        <button
-          type="button"
-          className="publish-btn"
-          disabled={busy !== null}
-          aria-haspopup="menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((o) => !o)}
-        >
-          {busy ? '发布中…' : 'Publish'}
-        </button>
-        {menuOpen && (
-          <div className="publish-menu" role="menu">
-            {destinations.map((dest) => (
-              <button
-                key={dest.id}
-                type="button"
-                role="menuitem"
-                className="publish-item"
-                title={dest.hint}
-                onClick={() => pick(dest)}
-              >
-                <span className="publish-item-icon">{dest.icon}</span>
-                <span className="publish-item-name">{dest.name}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
       <main className="sheet-area">
         <div className="sheet">
+          <button
+            type="button"
+            className="sheet-menu-btn"
+            aria-label="设置"
+            aria-haspopup="dialog"
+            onClick={() => setSettingsOpen(true)}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <circle cx="5" cy="12" r="1.8" />
+              <circle cx="12" cy="12" r="1.8" />
+              <circle cx="19" cy="12" r="1.8" />
+            </svg>
+          </button>
+
+          <div className="publish" ref={publishRef}>
+            <button
+              type="button"
+              className="publish-btn"
+              disabled={busy !== null}
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              {busy ? '发布中…' : 'Publish'}
+            </button>
+            {menuOpen && (
+              <div className="publish-menu" role="menu">
+                {destinations.map((dest) => (
+                  <button
+                    key={dest.id}
+                    type="button"
+                    role="menuitem"
+                    className="publish-item"
+                    title={dest.hint}
+                    onClick={() => pick(dest)}
+                  >
+                    <span className="publish-item-icon">{dest.icon}</span>
+                    <span className="publish-item-name">{dest.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <Editor ref={editorRef} defaultValue={initialDraft} onChange={persist} />
         </div>
       </main>
@@ -131,6 +146,8 @@ function App() {
           }}
         />
       )}
+
+      {settingsOpen && <SettingsDialog onClose={() => setSettingsOpen(false)} />}
     </div>
   )
 }
@@ -183,6 +200,65 @@ function ConfigDialog({
           </button>
           <button type="button" disabled={!canSave} onClick={save}>
             保存并发送
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SettingsDialog({ onClose }: { onClose: () => void }) {
+  // Destinations that need credentials (currently GitHub Gist's token).
+  const configurable = destinations.filter((d) => d.config?.length)
+  const fieldId = (destId: string, key: string) => `${destId}.${key}`
+
+  const [values, setValues] = useState<Record<string, string>>(() => {
+    const v: Record<string, string> = {}
+    for (const d of configurable)
+      for (const f of d.config ?? []) v[fieldId(d.id, f.key)] = getConfig(d.id, f.key) ?? ''
+    return v
+  })
+  const [saved, setSaved] = useState(false)
+
+  function save() {
+    for (const d of configurable)
+      for (const f of d.config ?? [])
+        setConfig(d.id, f.key, (values[fieldId(d.id, f.key)] ?? '').trim())
+    setSaved(true)
+    setTimeout(() => setSaved(false), 1500)
+  }
+
+  return (
+    <div className="overlay" onClick={onClose}>
+      <div className="dialog" onClick={(e) => e.stopPropagation()}>
+        <h2>设置</h2>
+        <p className="dialog-note">所有配置仅保存在本浏览器（localStorage），不会上传。</p>
+        {configurable.map((d) => (
+          <div key={d.id}>
+            <div className="settings-group-title">
+              {d.icon} {d.name}
+            </div>
+            {(d.config ?? []).map((f) => (
+              <label key={f.key} className="field">
+                <span>{f.label}</span>
+                <input
+                  type={f.type ?? 'text'}
+                  placeholder={f.placeholder}
+                  value={values[fieldId(d.id, f.key)]}
+                  onChange={(e) =>
+                    setValues((v) => ({ ...v, [fieldId(d.id, f.key)]: e.target.value }))
+                  }
+                />
+              </label>
+            ))}
+          </div>
+        ))}
+        <div className="dialog-actions">
+          <button type="button" className="ghost" onClick={onClose}>
+            关闭
+          </button>
+          <button type="button" onClick={save}>
+            {saved ? '已保存' : '保存'}
           </button>
         </div>
       </div>

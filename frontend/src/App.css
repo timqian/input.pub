@@ -24,6 +24,7 @@
   /* Roomy horizontal gutter so the left block handles stay inside the page. */
   padding: 48px 92px;
   display: flex;
+  position: relative; /* anchor the corner controls (settings / publish) */
 }
 /* Editor fills the sheet so the whole page is a writing surface. */
 .sheet .editor,
@@ -52,12 +53,38 @@
   }
 }
 
-/* ---- Publish button (top-right) ---- */
+/* ---- Corner controls anchored to the sheet ---- */
+/* Settings (three dots) — sheet top-left */
+.sheet-menu-btn {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.sheet-menu-btn:hover {
+  color: var(--text);
+  border-color: var(--muted);
+  background: var(--hover);
+}
+
+/* Publish — sheet top-right */
 .publish {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 40;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 5;
 }
 .publish-btn {
   padding: 0.3rem 1rem;
@@ -169,6 +196,11 @@
   margin: 0;
   font-size: 0.78rem;
   color: var(--muted);
+}
+.settings-group-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
 }
 .field {
   display: flex;
