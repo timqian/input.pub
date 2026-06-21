@@ -20,7 +20,8 @@
   font: 16px/1.6 var(--sans);
   color-scheme: light dark;
   color: var(--text);
-  background: var(--bg);
+  /* Match the backdrop so the iOS status-bar / overscroll area has no seam. */
+  background: var(--backdrop);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
