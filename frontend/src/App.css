@@ -7,7 +7,7 @@
 .sheet-area {
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 5rem 1rem; /* extra 10px above the sheet */
+  padding: 4rem 1rem 1rem; /* extra 10px above the sheet */
   display: flex;
   justify-content: center;
   background: var(--backdrop);
@@ -15,7 +15,9 @@
 .sheet {
   width: 100%;
   max-width: 820px; /* a touch wider than A4 for a roomier writing column */
-  min-height: 1123px; /* A4 height @96dpi */
+  /* Fill the viewport (minus .sheet-area's 4rem top + 1rem bottom) so an
+     empty page fits on one screen without a scrollbar, then grows with content. */
+  min-height: calc(100dvh - 5rem);
   height: max-content;
   background: var(--paper);
   border: 1px solid var(--line);
@@ -26,29 +28,39 @@
   display: flex;
 }
 /* Editor fills the sheet so the whole page is a writing surface. */
-.sheet .editor,
+.sheet .editor {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
 .sheet .milkdown {
   flex: 1;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
   background: transparent;
 }
 .sheet .milkdown .ProseMirror {
-  min-height: 1000px;
+  flex: 1;
   padding: 0;
 }
 /* NOTE: all Milkdown/Crepe theme overrides (colors, fonts, cursor, handles,
    tables) live in components/editor-theme.css. */
 
-@media (max-width: 640px) {
+@media (max-width: 700px) {
+  /* Keep a top gap (backdrop) so the fixed Publish button sits above the
+     sheet, not over its content. Sheet stays full-bleed left/right. */
   .sheet-area {
-    padding: 0;
+    padding: 4rem 0 0;
+    width: 100%;
   }
   .sheet {
-    min-height: 100dvh;
+    min-height: calc(100dvh - 4rem);
     border: none;
+    border-top: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
-    padding: 3.5rem 1.1rem 2rem;
+    padding: 1.75rem 1.1rem 2rem;
   }
 }
 
