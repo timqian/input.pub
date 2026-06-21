@@ -89,20 +89,6 @@ function App() {
   return (
     <div className="app">
       <div className="topbar">
-        <button
-          type="button"
-          className="sheet-menu-btn"
-          aria-label="设置"
-          aria-haspopup="dialog"
-          onClick={() => setSettingsOpen(true)}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <circle cx="5" cy="12" r="1.8" />
-            <circle cx="12" cy="12" r="1.8" />
-            <circle cx="19" cy="12" r="1.8" />
-          </svg>
-        </button>
-
         <div className="publish" ref={publishRef}>
           <button
             type="button"
@@ -129,6 +115,19 @@ function App() {
                   <span className="publish-item-name">{dest.name}</span>
                 </button>
               ))}
+              <div className="publish-menu-divider" />
+              <button
+                type="button"
+                role="menuitem"
+                className="publish-item"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setSettingsOpen(true)
+                }}
+              >
+                <span className="publish-item-icon">⚙️</span>
+                <span className="publish-item-name">设置</span>
+              </button>
             </div>
           )}
         </div>

@@ -66,32 +66,11 @@
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  pointer-events: none; /* let clicks pass between the controls */
+  justify-content: flex-end; /* Publish sits at the sheet's right edge */
+  pointer-events: none; /* let clicks pass through the empty bar area */
 }
 .topbar > * {
   pointer-events: auto;
-}
-
-/* Settings (three dots) — left edge of the sheet */
-.sheet-menu-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-}
-.sheet-menu-btn:hover {
-  color: var(--text);
-  border-color: var(--muted);
-  background: var(--hover);
 }
 
 /* Publish — right edge of the sheet */
@@ -149,6 +128,11 @@
 }
 .publish-item:hover {
   background: var(--hover);
+}
+.publish-menu-divider {
+  height: 1px;
+  margin: 0.3rem 0.2rem;
+  background: var(--line);
 }
 .publish-item-icon {
   font-size: 1.1rem;
