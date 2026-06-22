@@ -371,6 +371,8 @@ function SettingsDialog({
     return v
   })
   const [saved, setSaved] = useState(false)
+  const [open, setOpen] = useState<Record<string, boolean>>({})
+  const toggleOpen = (id: string) => setOpen((o) => ({ ...o, [id]: !o[id] }))
 
   function save() {
     for (const d of destinations)
@@ -391,20 +393,46 @@ function SettingsDialog({
         </p>
 
         <div className="settings-dests">
-          {destinations.map((d) => (
+          {destinations.map((d) => {
+            const hasConfig = fieldsByDest[d.id].length > 0
+            return (
             <div key={d.id} className="settings-dest">
-              <label className="toggle-row">
-                <span className="toggle-label">
-                  <span className="toggle-icon">{d.icon}</span>
-                  {d.name}
-                </span>
+              <div className="dest-row">
+                {hasConfig ? (
+                  <button
+                    type="button"
+                    className="dest-head"
+                    aria-expanded={!!open[d.id]}
+                    onClick={() => toggleOpen(d.id)}
+                  >
+                    <span className="toggle-icon">{d.icon}</span>
+                    <span className="dest-name">{d.name}</span>
+                    <svg
+                      className="dest-caret"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </button>
+                ) : (
+                  <span className="dest-head dest-head--static">
+                    <span className="toggle-icon">{d.icon}</span>
+                    <span className="dest-name">{d.name}</span>
+                  </span>
+                )}
                 <input
                   type="checkbox"
                   checked={!!enabled[d.id]}
                   onChange={(e) => onToggle(d.id, e.target.checked)}
                 />
-              </label>
-              {fieldsByDest[d.id].length > 0 && (
+              </div>
+              {hasConfig && open[d.id] && (
                 <div className="settings-dest-config">
                   {fieldsByDest[d.id].map((f) => (
                     <label key={f.key} className="field">
@@ -423,7 +451,8 @@ function SettingsDialog({
                 </div>
               )}
             </div>
-          ))}
+            )
+          })}
         </div>
 
         <div className="dialog-actions">
