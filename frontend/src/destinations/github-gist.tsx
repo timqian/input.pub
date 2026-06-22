@@ -16,7 +16,19 @@ export const githubGist: Destination = {
       label: 'GitHub Token',
       placeholder: 'ghp_…',
       type: 'password',
-      hint: '用一个 classic token，勾选 gist 权限。',
+      hint: (
+        <>
+          用一个 classic token，勾选 <b>gist</b>。{' '}
+          <a
+            href="https://github.com/settings/tokens/new?scopes=gist&description=Input%20Pub%20(gist)"
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            去创建 ↗
+          </a>
+        </>
+      ),
     },
   ],
   async send(markdown, ctx) {
