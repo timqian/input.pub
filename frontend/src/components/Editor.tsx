@@ -37,7 +37,10 @@ export function Editor({ defaultValue, onChange, ref }: EditorProps) {
       root: rootRef.current,
       defaultValue,
       featureConfigs: {
-        [Crepe.Feature.Placeholder]: { text: 'Input here. Hit Publish to send anywhere.' },
+        [Crepe.Feature.Placeholder]: {
+          text: 'Input here. Hit Publish to send anywhere.',
+          mode: 'doc', // only when the whole doc is empty, not on every blank line
+        },
       },
     })
     crepe.on((api) => {
