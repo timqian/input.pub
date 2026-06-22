@@ -9,5 +9,6 @@ export const gemini: Destination = {
   id: 'gemini',
   name: 'Gemini',
   icon: GeminiIcon,
+  defaultEnabled: false,
   clipboard: { url: 'https://gemini.google.com/app' },
 }

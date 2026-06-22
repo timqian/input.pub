@@ -1,1 +1,0 @@
-- setting 末尾加一个 “suggest new destination" 指向我们的 GitHub Issue。

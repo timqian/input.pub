@@ -494,6 +494,15 @@ function SettingsDialog({
           })}
         </div>
 
+        <a
+          className="settings-suggest"
+          href="https://github.com/timqian/inputpub/issues/new?title=Suggest%20a%20new%20destination&labels=destination"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Suggest a new destination ↗
+        </a>
+
         <div className="dialog-actions">
           <button type="button" className="ghost" onClick={onClose}>
             Close

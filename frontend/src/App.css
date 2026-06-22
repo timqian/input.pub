@@ -347,6 +347,17 @@
   color: var(--text);
   text-decoration: underline;
 }
+/* Footer link in the settings modal pointing to the GitHub issue tracker. */
+.settings-suggest {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+.settings-suggest:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;

@@ -6,6 +6,7 @@ export const claude: Destination = {
   id: 'claude',
   name: 'Claude',
   icon: ClaudeIcon,
+  defaultEnabled: false,
   send(markdown) {
     const url = `https://claude.ai/new?q=${encodeURIComponent(markdown.trim())}`
     window.open(url, '_blank', 'noopener,noreferrer')
