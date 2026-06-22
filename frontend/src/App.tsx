@@ -349,34 +349,32 @@ function SettingsDialog({
   onToggle: (id: string, on: boolean) => void
   onClose: () => void
 }) {
-  // Credential groups, deduping fields that are shared across destinations
-  // (e.g. the GitHub token shown once, under the GitHub group).
+  // Config fields shown per destination, deduping fields shared across
+  // destinations (the GitHub token shows once, under GitHub — not Gist).
   const seen = new Set<string>()
-  const groups = destinations
-    .filter((d) => d.config?.length)
-    .map((d) => ({
-      d,
-      fields: (d.config ?? []).filter((f) => {
-        if (f.shared) {
-          if (seen.has(f.shared)) return false
-          seen.add(f.shared)
-        }
-        return true
-      }),
-    }))
-    .filter((g) => g.fields.length)
+  const fieldsByDest: Record<string, ConfigField[]> = {}
+  for (const d of destinations) {
+    fieldsByDest[d.id] = (d.config ?? []).filter((f) => {
+      if (f.shared) {
+        if (seen.has(f.shared)) return false
+        seen.add(f.shared)
+      }
+      return true
+    })
+  }
 
   const locKey = (d: Destination, f: ConfigField) => fieldLoc(d, f).join('.')
   const [values, setValues] = useState<Record<string, string>>(() => {
     const v: Record<string, string> = {}
-    for (const { d, fields } of groups) for (const f of fields) v[locKey(d, f)] = readField(d, f)
+    for (const d of destinations)
+      for (const f of fieldsByDest[d.id]) v[locKey(d, f)] = readField(d, f)
     return v
   })
   const [saved, setSaved] = useState(false)
 
   function save() {
-    for (const { d, fields } of groups)
-      for (const f of fields) {
+    for (const d of destinations)
+      for (const f of fieldsByDest[d.id]) {
         const [sd, sk] = fieldLoc(d, f)
         setConfig(sd, sk, (values[locKey(d, f)] ?? '').trim())
       }
@@ -388,44 +386,45 @@ function SettingsDialog({
     <div className="overlay" onClick={onClose}>
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
         <h2>设置</h2>
-        <p className="dialog-note">所有配置仅保存在本浏览器（localStorage），不会上传。</p>
+        <p className="dialog-note">
+          每个目标可单独开关；带配置的目标在下方填写。仅保存在本浏览器（localStorage），不会上传。
+        </p>
 
-        <div className="settings-group-title">显示的发布目标</div>
-        <div className="toggle-list">
+        <div className="settings-dests">
           {destinations.map((d) => (
-            <label key={d.id} className="toggle-row">
-              <span className="toggle-label">
-                <span className="toggle-icon">{d.icon}</span>
-                {d.name}
-              </span>
-              <input
-                type="checkbox"
-                checked={!!enabled[d.id]}
-                onChange={(e) => onToggle(d.id, e.target.checked)}
-              />
-            </label>
+            <div key={d.id} className="settings-dest">
+              <label className="toggle-row">
+                <span className="toggle-label">
+                  <span className="toggle-icon">{d.icon}</span>
+                  {d.name}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={!!enabled[d.id]}
+                  onChange={(e) => onToggle(d.id, e.target.checked)}
+                />
+              </label>
+              {fieldsByDest[d.id].length > 0 && (
+                <div className="settings-dest-config">
+                  {fieldsByDest[d.id].map((f) => (
+                    <label key={f.key} className="field">
+                      <span>{f.label}</span>
+                      <input
+                        type={f.type ?? 'text'}
+                        placeholder={f.placeholder}
+                        value={values[locKey(d, f)]}
+                        onChange={(e) =>
+                          setValues((v) => ({ ...v, [locKey(d, f)]: e.target.value }))
+                        }
+                      />
+                      {f.hint && <span className="field-hint">{f.hint}</span>}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
-
-        {groups.map(({ d, fields }) => (
-          <div key={d.id}>
-            <div className="settings-group-title">
-              {d.icon} {d.name}
-            </div>
-            {fields.map((f) => (
-              <label key={f.key} className="field">
-                <span>{f.label}</span>
-                <input
-                  type={f.type ?? 'text'}
-                  placeholder={f.placeholder}
-                  value={values[locKey(d, f)]}
-                  onChange={(e) => setValues((v) => ({ ...v, [locKey(d, f)]: e.target.value }))}
-                />
-                {f.hint && <span className="field-hint">{f.hint}</span>}
-              </label>
-            ))}
-          </div>
-        ))}
 
         <div className="dialog-actions">
           <button type="button" className="ghost" onClick={onClose}>

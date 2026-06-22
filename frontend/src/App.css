@@ -179,21 +179,30 @@
   height: 1em;
   vertical-align: -0.15em;
 }
-.toggle-list {
+.settings-dests {
   display: flex;
   flex-direction: column;
+}
+.settings-dest {
+  padding: 0.55rem 0;
+}
+.settings-dest + .settings-dest {
+  border-top: 1px solid var(--line);
+}
+/* A destination's own config, nested under its toggle and aligned with the name. */
+.settings-dest-config {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.7rem 0 0.3rem 1.75rem; /* indent = toggle icon (1.2rem) + gap (0.55rem) */
 }
 .toggle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.4rem 0;
   font-size: 0.9rem;
   cursor: pointer;
-}
-.toggle-row + .toggle-row {
-  border-top: 1px solid var(--line);
 }
 .toggle-label {
   display: inline-flex;

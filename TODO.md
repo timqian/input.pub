@@ -1,4 +1,5 @@
 - [x] github/gist token 可以用同一个
 - [x] setting 里面可以配置打开哪些 destination
 - [x] 增加发布到 v2EX，并且默认是不打开的
+- 设置 modal
 - 关于图片
