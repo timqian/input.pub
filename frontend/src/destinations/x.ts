@@ -1,12 +1,13 @@
 import type { Destination } from './types'
 import { markdownToText } from '../lib/markdown'
+import { XIcon } from './icons'
 
 /** Open X's compose window with the content pre-filled — no auth needed.
  *  X is plain text only, so flatten Markdown to readable text first. */
 export const x: Destination = {
   id: 'x',
   name: 'X',
-  icon: '𝕏',
+  icon: XIcon,
   hint: '280 字符上限，超出请自行精简',
   send(markdown) {
     const text = markdownToText(markdown)

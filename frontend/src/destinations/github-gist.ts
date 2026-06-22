@@ -1,5 +1,6 @@
 import type { Destination } from './types'
 import { deriveTitle } from '../lib/title'
+import { GistIcon } from './icons'
 
 /**
  * Create a private GitHub Gist using the user's own Personal Access Token,
@@ -8,7 +9,7 @@ import { deriveTitle } from '../lib/title'
 export const githubGist: Destination = {
   id: 'github-gist',
   name: 'GitHub Gist',
-  icon: '🐙',
+  icon: GistIcon,
   config: [
     {
       key: 'token',

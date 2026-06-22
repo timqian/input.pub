@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Editor, type EditorHandle } from './components/Editor'
 import { destinations, type Destination } from './destinations'
+import { GearIcon } from './destinations/icons'
 import {
   debounce,
   getConfig,
@@ -139,7 +140,7 @@ function App() {
                   setSettingsOpen(true)
                 }}
               >
-                <span className="publish-item-icon">⚙️</span>
+                <span className="publish-item-icon">{GearIcon}</span>
                 <span className="publish-item-name">设置</span>
               </button>
             </div>

@@ -162,10 +162,22 @@
   background: var(--line);
 }
 .publish-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.1rem;
   line-height: 1;
   width: 1.4rem;
-  text-align: center;
+}
+.publish-item-icon svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+.settings-group-title svg {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
 }
 
 /* ---- Toast ---- */
