@@ -1,4 +1,25 @@
+import { useEffect, useRef } from 'react'
 import './Pro.css'
+
+/** Kit (ConvertKit) email-capture form. Its async script injects the form
+ *  where it's mounted; a raw <script> in JSX won't execute, so append it via
+ *  the DOM. Pro isn't built yet — this collects a launch waitlist. */
+function KitSignupForm() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const host = ref.current
+    if (!host) return
+    const script = document.createElement('script')
+    script.async = true
+    script.src = 'https://open-source-jobs.kit.com/18163cee49/index.js'
+    script.dataset.uid = '18163cee49'
+    host.appendChild(script)
+    return () => {
+      host.innerHTML = ''
+    }
+  }, [])
+  return <div className="pro-signup" ref={ref} />
+}
 
 /** Standalone, minimalist pricing page for Input Pub Pro.
  *  Reached at /pro (see main.tsx); plain anchor links navigate, so it works
@@ -35,10 +56,11 @@ function Pro() {
           </li>
         </ul>
 
-        <a className="pro-cta" href="mailto:timqian92@gmail.com?subject=Input%20Pub%20Pro">
-          Get Pro
-        </a>
-        <p className="pro-note">Cancel anytime. The free editor stays free.</p>
+        <KitSignupForm />
+        <p className="pro-note">
+          Coming soon — leave your email and we'll let you know when Pro launches. The free editor
+          stays free.
+        </p>
         </main>
       </div>
     </div>

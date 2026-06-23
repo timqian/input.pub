@@ -93,19 +93,8 @@
   line-height: 1.5;
 }
 
-.pro-cta {
+.pro-signup {
   margin-top: 1.75rem;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  transition: opacity 0.15s;
-}
-.pro-cta:hover {
-  opacity: 0.92;
 }
 
 .pro-note {
