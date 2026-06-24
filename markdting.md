@@ -1,2 +1,5 @@
 - pro 上线时送一些年度会员
 - input put skill
+- input.pub？
+- app?
+- Make a video like this one: https://x.com/steve8708/status/2069064659613958348?s=46

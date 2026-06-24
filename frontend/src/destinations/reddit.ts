@@ -11,7 +11,6 @@ export const reddit: Destination = {
   id: 'reddit',
   name: 'Reddit',
   icon: RedditIcon,
-  defaultEnabled: false,
   config: [
     {
       key: 'title',
