@@ -3,3 +3,5 @@
 - input.pub？
 - app?
 - Make a video like this one: https://x.com/steve8708/status/2069064659613958348?s=46
+- 连接 LLM/agent: 比如直接从文档变成一个产品
+- 保存的文档就像这样就很好：https://zhangluyao.com/blog

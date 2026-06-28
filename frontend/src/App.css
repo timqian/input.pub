@@ -12,7 +12,8 @@
 .sheet-area {
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 4rem var(--page-pad) 1rem;
+  /* No bottom padding: the sheet runs flush to the bottom of the window. */
+  padding: 4rem var(--page-pad) 0;
   display: flex;
   justify-content: center;
   background: var(--backdrop);
@@ -20,13 +21,14 @@
 .sheet {
   width: 100%;
   max-width: var(--sheet-max); /* a touch wider than A4 for a roomier writing column */
-  /* Fill the viewport (minus .sheet-area's 4rem top + 1rem bottom) so an
-     empty page fits on one screen without a scrollbar, then grows with content. */
-  min-height: calc(100dvh - 5rem);
+  /* Fill the viewport below the 4rem top gap so an empty page reaches the
+     bottom of the window without a scrollbar, then grows with content. */
+  min-height: calc(100dvh - 4rem);
   height: max-content;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  /* Square the bottom corners since the sheet sits flush against the window. */
+  border-radius: 8px 8px 0 0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
   /* Roomy horizontal gutter so the left block handles stay inside the page. */
   padding: 48px 92px;
@@ -59,10 +61,10 @@
     --page-pad: 0.75rem;
   }
   .sheet-area {
-    padding-bottom: 0.75rem;
+    padding-bottom: 0;
   }
   .sheet {
-    min-height: calc(100dvh - 4.75rem); /* viewport − top gap − bottom margin */
+    min-height: calc(100dvh - 4rem); /* viewport − top gap; flush to the bottom */
     padding: 1.75rem 1.25rem 2rem;
   }
 }
