@@ -4,7 +4,9 @@ import { templateHint } from './templateHelp'
 
 /**
  * WeChat's Official Accounts platform has no public posting API, so copy the
- * content and open the editor — the user pastes into a new article. Off by
+ * content and open the editor — the user pastes into a new article. The content
+ * is copied as rich text (`format: 'html'`), so it arrives already formatted;
+ * external image URLs are fetched and re-hosted by the editor on paste. Off by
  * default.
  */
 export const wechat: Destination = {
@@ -12,14 +14,14 @@ export const wechat: Destination = {
   name: 'WeChat MP',
   icon: WeChatIcon,
   defaultEnabled: false,
-  clipboard: { url: 'https://mp.weixin.qq.com/' },
+  clipboard: { url: 'https://mp.weixin.qq.com/', format: 'html' },
   config: [
     {
       key: 'content',
       label: 'Content template',
       type: 'textarea',
       optional: true,
-      default: '{{ body }}',
+      default: '{{ body | html }}',
       hint: templateHint,
     },
   ],

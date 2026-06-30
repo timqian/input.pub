@@ -23,8 +23,8 @@ import { SettingsDialog } from './components/dialogs/SettingsDialog'
 import { ImageHostDialog } from './components/dialogs/ImageHostDialog'
 import { ImageUploadDialog } from './components/dialogs/ImageUploadDialog'
 
-/** Delay before a clipboard destination navigates away, so the user can read
- *  the "copied" toast first. */
+/** Delay before a clipboard destination opens the target, so the user reads the
+ *  "copied" toast before the new tab takes focus. */
 const CLIPBOARD_OPEN_DELAY = 2000
 
 function App() {
@@ -112,13 +112,26 @@ function App() {
     setBusy(dest.id)
     setStatus(null)
     try {
-      // Copy-and-paste destinations: copy, show a prominent toast, then
-      // navigate (same tab) after a beat so the user reads it before leaving.
+      // Copy-and-paste destinations: copy, show a prominent toast, then open the
+      // target after a beat so the user reads the toast before the new tab takes
+      // focus. Open in a new tab so the editor (and the just-copied draft) stays
+      // put; if the popup is blocked, fall back to same-tab navigation. Copy
+      // must run while this tab is focused, so it happens before the tab opens.
       if (dest.clipboard) {
         const text = ctxFor(dest, input, markdown).slot('content')
         let copied = false
         try {
-          await navigator.clipboard.writeText(text)
+          if (dest.clipboard.format === 'html') {
+            // Rich-text paste: HTML as text/html, raw Markdown as the fallback.
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'text/html': new Blob([text], { type: 'text/html' }),
+                'text/plain': new Blob([markdown], { type: 'text/plain' }),
+              }),
+            ])
+          } else {
+            await navigator.clipboard.writeText(text)
+          }
           copied = true
         } catch {
           // clipboard may be unavailable; still send the user over
@@ -132,7 +145,9 @@ function App() {
         })
         const { url } = dest.clipboard
         setTimeout(() => {
-          window.location.href = url
+          // The click's user activation (~5s) is still valid here, so the new
+          // tab isn't popup-blocked; if it is, navigate this tab instead.
+          if (!window.open(url, '_blank')) window.location.href = url
         }, CLIPBOARD_OPEN_DELAY)
         return
       }

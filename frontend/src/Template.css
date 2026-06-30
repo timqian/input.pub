@@ -1,0 +1,144 @@
+.tpl {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem 4rem;
+  background: var(--backdrop);
+}
+
+.tpl-wrap {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Plain text just above the card, aligned to its left edge. */
+.tpl-back {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin: 0 0 0.6rem 0.25rem;
+}
+.tpl-back:hover {
+  color: var(--text);
+}
+
+.tpl-card {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  padding: 2.5rem 2.25rem;
+}
+
+.tpl-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.tpl-tagline {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.tpl-section {
+  margin-top: 2.25rem;
+}
+.tpl-h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.tpl-p {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.tpl-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Inline + block code share the monospace look; block code wraps long lines. */
+code,
+.tpl-code {
+  font-family: Menlo, Consolas, monospace;
+}
+.tpl-card code {
+  background: var(--backdrop);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+}
+.tpl-code {
+  margin: 0;
+  background: var(--backdrop);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tpl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.tpl-table td {
+  border-top: 1px solid var(--line);
+  padding: 0.6rem 0.5rem;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.tpl-table tr:first-child td {
+  border-top: none;
+}
+/* Keep the placeholder/filter column from collapsing the description. */
+.tpl-table td:first-child {
+  white-space: nowrap;
+  width: 1%;
+  padding-right: 1rem;
+}
+.tpl-table td:last-child {
+  color: var(--muted);
+}
+
+.tpl-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.tpl-example-desc {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .tpl-card {
+    padding: 2rem 1.4rem;
+  }
+  /* Stack each table row so long placeholders don't crowd the description. */
+  .tpl-table td:first-child {
+    white-space: normal;
+  }
+}

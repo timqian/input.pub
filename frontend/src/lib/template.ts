@@ -1,5 +1,5 @@
 import { deriveTitle } from './title'
-import { markdownToText, stripFirstH1, stripImages } from './markdown'
+import { markdownToText, markdownToInlineHtml, stripFirstH1, stripImages } from './markdown'
 
 /**
  * A tiny, safe template engine for shaping a note before it's published.
@@ -15,6 +15,7 @@ import { markdownToText, stripFirstH1, stripImages } from './markdown'
 /** String filters that can be piped onto a value. */
 const FILTERS: Record<string, (s: string) => string> = {
   plain: (s) => markdownToText(s), // strip Markdown styling → readable text
+  html: (s) => markdownToInlineHtml(s), // Markdown → inline-styled HTML (rich paste)
   'no-title': (s) => stripFirstH1(s), // drop the first # heading
   'no-images': (s) => stripImages(s), // drop ![](…) image syntax
   quote: (s) => `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`, // YAML-safe

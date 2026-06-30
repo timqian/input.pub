@@ -4,6 +4,7 @@ import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 import './editor-theme.css' // our overrides — must load after the theme
 import { isImageHostConfigured, uploadImage } from '../lib/imageHost'
+import { stripEmptyLineBreaks } from '../lib/markdown'
 
 export interface EditorHandle {
   getMarkdown: () => string
@@ -47,7 +48,9 @@ export function Editor({
   }, [onImageUploadError])
 
   useImperativeHandle(ref, () => ({
-    getMarkdown: () => crepeRef.current?.getMarkdown() ?? '',
+    // Exported Markdown is normalized; the live draft (persisted from the
+    // markdownUpdated stream) keeps Milkdown's blank-line round-trip.
+    getMarkdown: () => stripEmptyLineBreaks(crepeRef.current?.getMarkdown() ?? ''),
   }))
 
   useEffect(() => {

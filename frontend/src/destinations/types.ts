@@ -44,11 +44,16 @@ export interface Destination {
   defaultEnabled?: boolean
   /**
    * Copy-and-paste destinations (no API / no URL prefill). When set, publishing
-   * copies the markdown to the clipboard, shows a prominent toast, then
+   * copies the content to the clipboard, shows a prominent toast, then
    * navigates to this URL after a short delay so the user can read the toast
    * first and paste once they arrive. Such destinations don't need `send`.
+   *
+   * `format: 'html'` copies the rendered template as rich text (the `text/html`
+   * clipboard flavor, with the raw Markdown as the `text/plain` fallback), so a
+   * rich-text editor like WeChat's pastes it already formatted. Defaults to
+   * plain text.
    */
-  clipboard?: { url: string }
+  clipboard?: { url: string; format?: 'markdown' | 'html' }
   /**
    * Perform the publish/send for the given markdown.
    * Throw to signal failure — the UI surfaces the message.
