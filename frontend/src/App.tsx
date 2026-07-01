@@ -10,6 +10,8 @@ import {
   MonitorIcon,
   SunIcon,
   MoonIcon,
+  SparklesIcon,
+  EditIcon,
 } from './destinations/icons'
 import { applyThemePref, getThemePref, nextThemePref, type ThemePref } from './lib/theme'
 import { renderTemplate, templateVars } from './lib/template'
@@ -28,6 +30,8 @@ import { Menu, MenuDivider, MenuItem } from './components/Menu'
 import { Toast, type ToastStatus } from './components/Toast'
 import { LoadDialog } from './components/dialogs/LoadDialog'
 import { ConfigDialog } from './components/dialogs/ConfigDialog'
+import { AiProviderDialog } from './components/dialogs/AiProviderDialog'
+import { AiPromptsDialog } from './components/dialogs/AiPromptsDialog'
 import { PromptDialog } from './components/dialogs/PromptDialog'
 import { SettingsDialog } from './components/dialogs/SettingsDialog'
 import { ImageHostDialog } from './components/dialogs/ImageHostDialog'
@@ -57,6 +61,8 @@ function App() {
   const [imageHostOpen, setImageHostOpen] = useState(false)
   const [imageChoiceOpen, setImageChoiceOpen] = useState(false)
   const [loadOpen, setLoadOpen] = useState(false)
+  const [aiProviderOpen, setAiProviderOpen] = useState(false)
+  const [aiPromptsOpen, setAiPromptsOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [configFor, setConfigFor] = useState<Destination | null>(null)
   const [promptFor, setPromptFor] = useState<Destination | null>(null)
@@ -78,6 +84,13 @@ function App() {
     setSeed(text)
     setEditorKey((k) => k + 1)
     saveDraft(text)
+  }
+
+  // Remount the editor while keeping its current content — used when editor-time
+  // config (e.g. the AI suggestion prompts, read once at mount) changes.
+  function reloadEditor() {
+    setSeed(editorRef.current?.getMarkdown() ?? seed)
+    setEditorKey((k) => k + 1)
   }
 
   function toggleEnabled(id: string, on: boolean) {
@@ -243,7 +256,25 @@ function App() {
                   setImageHostOpen(true)
                 }}
               >
-                Configure image host
+                Image Host
+              </MenuItem>
+              <MenuItem
+                icon={SparklesIcon}
+                onClick={() => {
+                  setToolsOpen(false)
+                  setAiProviderOpen(true)
+                }}
+              >
+                AI Provider
+              </MenuItem>
+              <MenuItem
+                icon={EditIcon}
+                onClick={() => {
+                  setToolsOpen(false)
+                  setAiPromptsOpen(true)
+                }}
+              >
+                AI Prompts
               </MenuItem>
               <MenuItem
                 icon={
@@ -330,6 +361,9 @@ function App() {
             onChange={persist}
             onImageUploadUnconfigured={() => setImageChoiceOpen(true)}
             onImageUploadError={(text) => setStatus({ kind: 'error', text })}
+            onAiUnconfigured={() => setAiProviderOpen(true)}
+            onAiError={(text) => setStatus({ kind: 'error', text })}
+            onEditPrompts={() => setAiPromptsOpen(true)}
           />
         </div>
       </main>
@@ -388,6 +422,12 @@ function App() {
       )}
 
       {imageHostOpen && <ImageHostDialog onClose={() => setImageHostOpen(false)} />}
+
+      {aiProviderOpen && <AiProviderDialog onClose={() => setAiProviderOpen(false)} />}
+
+      {aiPromptsOpen && (
+        <AiPromptsDialog onClose={() => setAiPromptsOpen(false)} onSaved={reloadEditor} />
+      )}
     </div>
   )
 }

@@ -40,7 +40,7 @@ export function ImageHostDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <Modal onClose={onClose}>
-      <ModalTitle>Image hosts</ModalTitle>
+      <ModalTitle>Configure Image Host</ModalTitle>
       <ModalNote>
         Pick a default and configure it; uploads go there. Keys are saved only in this browser
         (localStorage); never sent to us.

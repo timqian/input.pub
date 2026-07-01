@@ -213,6 +213,14 @@ export const MoonIcon: ReactNode = lineIcon(
   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />,
 )
 
+/* Edit — a pencil (used for "AI prompts" / "Edit prompts"). */
+export const EditIcon: ReactNode = lineIcon(
+  <>
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+  </>,
+)
+
 // ---- Image-host icons ----
 export const SparklesIcon = solid('M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z')
 

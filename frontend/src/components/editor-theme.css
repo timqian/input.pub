@@ -85,6 +85,83 @@
   border: 1px solid color-mix(in srgb, var(--text), transparent 80%);
 }
 
+/* AI instruction tooltip -------------------------------------------------- */
+
+/* Send button: Crepe pairs a `--crepe-color-primary` background (#333 in light)
+   with an `--crepe-color-on-inverse` arrow (#1a1a1a) — two dark tones, so the
+   arrow all but disappears. Map it onto the app's primary-button pair, which is
+   built to contrast in both light and dark. */
+.milkdown .ai-instruction-submit {
+  background: var(--btn-bg);
+}
+.milkdown .ai-instruction-submit svg {
+  color: var(--btn-fg);
+  fill: var(--btn-fg);
+}
+.milkdown .ai-instruction-submit:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--btn-bg), var(--text) 20%);
+}
+
+/* Suggestions list: drop the leading icon — the label alone is cleaner. */
+.milkdown .ai-instruction-item-icon {
+  display: none;
+}
+
+/* Instruction palette position: Crepe anchors it (via floating-ui) to the whole
+   selection's bounding rect. For a large selection that rect spans well past the
+   viewport, so the palette lands off-screen and becomes unreachable. Pin it to a
+   fixed, always-visible strip at the bottom instead, and center the palette with
+   flexbox. `!important` overrides floating-ui's inline top/left writes (which it
+   keeps re-applying via autoUpdate).
+   The wrapper spans the full viewport (left/right: 0) rather than being centered
+   with translateX(-50%): a transform is visual-only, so left:50% + a 360px child
+   still overflows the right edge and widens the page on mobile. A full-width
+   wrapper can't overflow; pointer-events lets clicks through the empty gutter. */
+.milkdown .milkdown-ai-instruction {
+  position: fixed !important;
+  inset: auto 0 24px 0 !important;
+  display: flex;
+  justify-content: center;
+  z-index: 12;
+  pointer-events: none;
+}
+
+/* Keep the 360px palette inside narrow viewports, and re-enable interaction. */
+.milkdown .milkdown-ai-instruction > .ai-instruction {
+  width: 360px;
+  max-width: calc(100% - 24px);
+  pointer-events: auto;
+}
+
+/* "Edit prompts" footer injected inside the palette card (see Editor.tsx).
+   A full-width secondary action at the bottom of the box. */
+.milkdown .ai-instruction .inputpub-edit-prompts {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--crepe-color-outline) 40%, transparent);
+  background: transparent;
+  font-family: var(--crepe-font-default);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--crepe-color-on-surface-variant);
+  cursor: pointer;
+}
+
+.milkdown .ai-instruction .inputpub-edit-prompts svg {
+  width: 14px;
+  height: 14px;
+}
+
+.milkdown .ai-instruction .inputpub-edit-prompts:hover {
+  background: var(--crepe-color-hover);
+  color: var(--crepe-color-on-background);
+}
+
 /* Fill the editor wrapper (and thus the sheet) so the whole page is a writing
    surface. The wrapper itself is laid out with Tailwind in Editor.tsx; these
    target the .milkdown / .ProseMirror nodes Crepe injects at runtime. */

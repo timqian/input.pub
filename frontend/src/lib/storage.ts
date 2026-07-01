@@ -53,6 +53,103 @@ export function setEnabled(destId: string, on: boolean): void {
   }
 }
 
+/** AI provider config (OpenAI-compatible: base URL + API key + model). Stored
+ *  only in this browser; the provider request goes straight to the endpoint. */
+export interface AiConfig {
+  baseUrl: string
+  apiKey: string
+  model: string
+}
+
+const aiKey = (field: keyof AiConfig) => `inputpub.ai.${field}`
+
+export function getAiConfig(): AiConfig {
+  const read = (field: keyof AiConfig) => {
+    try {
+      return localStorage.getItem(aiKey(field)) ?? ''
+    } catch {
+      return ''
+    }
+  }
+  return { baseUrl: read('baseUrl'), apiKey: read('apiKey'), model: read('model') }
+}
+
+export function setAiConfig(cfg: AiConfig): void {
+  try {
+    localStorage.setItem(aiKey('baseUrl'), cfg.baseUrl)
+    localStorage.setItem(aiKey('apiKey'), cfg.apiKey)
+    localStorage.setItem(aiKey('model'), cfg.model)
+  } catch {
+    /* storage unavailable — ignore */
+  }
+}
+
+/** Whether the AI provider has enough config to run (key + model). */
+export function isAiConfigured(): boolean {
+  const { apiKey, model } = getAiConfig()
+  return !!apiKey.trim() && !!model.trim()
+}
+
+/** A user-editable AI suggestion: the `label` shown in the ✨ palette and the
+ *  `prompt` (instruction) sent to the model when picked. */
+export interface AiPrompt {
+  id: string
+  label: string
+  prompt: string
+}
+
+const AI_PROMPTS_KEY = 'inputpub.ai.prompts'
+
+/** Starter prompts, seeded on first use. A few simple one-shot actions; users
+ *  can edit or delete any of them. Crepe's more elaborate tone/translate
+ *  submenus are intentionally left out. */
+export const DEFAULT_AI_PROMPTS: AiPrompt[] = [
+  {
+    id: 'improve',
+    label: 'Improve writing',
+    prompt: 'Improve the writing while preserving the original meaning.',
+  },
+  {
+    id: 'grammar',
+    label: 'Fix grammar & spelling',
+    prompt: 'Fix any grammar and spelling errors without changing the meaning.',
+  },
+  {
+    id: 'shorter',
+    label: 'Make shorter',
+    prompt: 'Make this shorter while preserving the key information.',
+  },
+  {
+    id: 'longer',
+    label: 'Make longer',
+    prompt: 'Expand this with more detail and examples.',
+  },
+]
+
+export function getAiPrompts(): AiPrompt[] {
+  try {
+    const raw = localStorage.getItem(AI_PROMPTS_KEY)
+    if (raw == null) return DEFAULT_AI_PROMPTS // never configured — seed defaults
+    const parsed: unknown = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return DEFAULT_AI_PROMPTS
+    // Keep only well-formed rows; an empty array is a valid "removed all" state.
+    return parsed.filter(
+      (p): p is AiPrompt =>
+        !!p && typeof p.id === 'string' && typeof p.label === 'string' && typeof p.prompt === 'string',
+    )
+  } catch {
+    return DEFAULT_AI_PROMPTS
+  }
+}
+
+export function setAiPrompts(prompts: AiPrompt[]): void {
+  try {
+    localStorage.setItem(AI_PROMPTS_KEY, JSON.stringify(prompts))
+  } catch {
+    /* storage unavailable — ignore */
+  }
+}
+
 /** The id of the image host chosen as default for uploads (unset = none). */
 export function getImageHostDefault(): string | undefined {
   try {
