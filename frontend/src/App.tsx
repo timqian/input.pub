@@ -12,6 +12,8 @@ import {
   MoonIcon,
   SparklesIcon,
   EditIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
 } from './destinations/icons'
 import { applyThemePref, getThemePref, nextThemePref, type ThemePref } from './lib/theme'
 import { renderTemplate, templateVars } from './lib/template'
@@ -57,6 +59,9 @@ function App() {
   const [busy, setBusy] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [toolsOpen, setToolsOpen] = useState(false)
+  // The tools menu drills into a "Settings" sub-view holding the config entries
+  // (image host / AI) that are noise for users who don't use those features.
+  const [toolsView, setToolsView] = useState<'main' | 'settings'>('main')
   const [theme, setTheme] = useState<ThemePref>(getThemePref)
   const [imageHostOpen, setImageHostOpen] = useState(false)
   const [imageChoiceOpen, setImageChoiceOpen] = useState(false)
@@ -75,7 +80,11 @@ function App() {
   const toolsRef = useRef<HTMLDivElement>(null)
 
   const closeMenu = useCallback(() => setMenuOpen(false), [])
-  const closeTools = useCallback(() => setToolsOpen(false), [])
+  const closeTools = useCallback(() => {
+    setToolsOpen(false)
+    // Reset to the top level so it doesn't reopen inside Settings next time.
+    setToolsView('main')
+  }, [])
   useDismiss(publishRef, closeMenu, menuOpen)
   useDismiss(toolsRef, closeTools, toolsOpen)
 
@@ -240,63 +249,81 @@ function App() {
           </button>
           {toolsOpen && (
             <Menu align="left">
-              <MenuItem
-                icon={LoadIcon}
-                onClick={() => {
-                  setToolsOpen(false)
-                  setLoadOpen(true)
-                }}
-              >
-                Load content
-              </MenuItem>
-              <MenuItem
-                icon={ImageIcon}
-                onClick={() => {
-                  setToolsOpen(false)
-                  setImageHostOpen(true)
-                }}
-              >
-                Image Host
-              </MenuItem>
-              <MenuItem
-                icon={SparklesIcon}
-                onClick={() => {
-                  setToolsOpen(false)
-                  setAiProviderOpen(true)
-                }}
-              >
-                AI Provider
-              </MenuItem>
-              <MenuItem
-                icon={EditIcon}
-                onClick={() => {
-                  setToolsOpen(false)
-                  setAiPromptsOpen(true)
-                }}
-              >
-                AI Prompts
-              </MenuItem>
-              <MenuItem
-                icon={
-                  theme === 'system' ? MonitorIcon : theme === 'light' ? SunIcon : MoonIcon
-                }
-                title="Switch color theme"
-                onClick={() => {
-                  const next = nextThemePref(theme)
-                  setTheme(next)
-                  applyThemePref(next)
-                }}
-              >
-                Theme: {theme === 'system' ? 'System' : theme === 'light' ? 'Light' : 'Dark'}
-              </MenuItem>
-              <MenuDivider />
-              <MenuItem
-                icon={FeedbackIcon}
-                href="https://bodhi.wtf/token/0xD6347200EEdB3f64bBdd2C363894dd043a24a488"
-                onClick={() => setToolsOpen(false)}
-              >
-                Feedback
-              </MenuItem>
+              {toolsView === 'main' ? (
+                <>
+                  <MenuItem
+                    icon={LoadIcon}
+                    onClick={() => {
+                      closeTools()
+                      setLoadOpen(true)
+                    }}
+                  >
+                    Load content
+                  </MenuItem>
+                  <MenuItem
+                    icon={
+                      theme === 'system' ? MonitorIcon : theme === 'light' ? SunIcon : MoonIcon
+                    }
+                    title="Switch color theme"
+                    onClick={() => {
+                      const next = nextThemePref(theme)
+                      setTheme(next)
+                      applyThemePref(next)
+                    }}
+                  >
+                    Theme: {theme === 'system' ? 'System' : theme === 'light' ? 'Light' : 'Dark'}
+                  </MenuItem>
+                  <MenuItem
+                    icon={GearIcon}
+                    trailing={ChevronRightIcon}
+                    onClick={() => setToolsView('settings')}
+                  >
+                    Settings
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    icon={FeedbackIcon}
+                    href="https://bodhi.wtf/token/0xD6347200EEdB3f64bBdd2C363894dd043a24a488"
+                    onClick={() => closeTools()}
+                  >
+                    Feedback
+                  </MenuItem>
+                </>
+              ) : (
+                <>
+                  <MenuItem icon={ChevronLeftIcon} onClick={() => setToolsView('main')}>
+                    Back
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    icon={ImageIcon}
+                    onClick={() => {
+                      closeTools()
+                      setImageHostOpen(true)
+                    }}
+                  >
+                    Image Host
+                  </MenuItem>
+                  <MenuItem
+                    icon={SparklesIcon}
+                    onClick={() => {
+                      closeTools()
+                      setAiProviderOpen(true)
+                    }}
+                  >
+                    AI Provider
+                  </MenuItem>
+                  <MenuItem
+                    icon={EditIcon}
+                    onClick={() => {
+                      closeTools()
+                      setAiPromptsOpen(true)
+                    }}
+                  >
+                    AI Prompts
+                  </MenuItem>
+                </>
+              )}
             </Menu>
           )}
         </div>
@@ -353,7 +380,7 @@ function App() {
       {/* A4-ish sheet: runs flush to the bottom of the window (no bottom gap,
           squared bottom corners), then grows with content. */}
       <main className="flex min-h-dvh justify-center bg-backdrop px-[var(--page-pad)] pt-16">
-        <div className="flex h-max min-h-[calc(100dvh-4rem)] w-full max-w-[var(--sheet-max)] rounded-t-lg border border-line bg-paper px-[92px] py-12 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] max-[700px]:px-5 max-[700px]:pb-8 max-[700px]:pt-7">
+        <div className="flex h-max min-h-[calc(100dvh-4rem)] w-full max-w-[var(--sheet-max)] rounded-t-lg border-[0.5px] border-edge bg-paper px-[92px] py-12 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] max-[700px]:px-5 max-[700px]:pb-8 max-[700px]:pt-7">
           <Editor
             key={editorKey}
             ref={editorRef}

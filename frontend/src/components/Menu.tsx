@@ -31,6 +31,7 @@ export function MenuItem({
   title,
   href,
   onClick,
+  trailing,
   children,
 }: {
   icon: ReactNode
@@ -38,12 +39,15 @@ export function MenuItem({
   /** When set, the item is a link opened in a new tab. */
   href?: string
   onClick?: () => void
+  /** Optional element pinned to the item's right edge (e.g. a submenu chevron). */
+  trailing?: ReactNode
   children: ReactNode
 }) {
   const inner = (
     <>
       <span className={itemIconCls}>{icon}</span>
       <span className="whitespace-nowrap">{children}</span>
+      {trailing && <span className="ml-auto inline-flex pl-[0.6rem] opacity-45">{trailing}</span>}
     </>
   )
   if (href) {

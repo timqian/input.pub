@@ -68,6 +68,36 @@
   --prosemirror-virtual-cursor-color: var(--text);
 }
 
+/* Block handle (+ / drag): Crepe ships these chunky (32px hit area, 24px icon)
+   and only flex-centers the wrapper, not each item — so the inline SVG sits low
+   and pokes out below the hover background. Slim them down, center the icon so
+   the background fully covers it, tuck the two buttons closer, and nudge the
+   whole handle down a hair so it lines up with the first text line. */
+.milkdown .milkdown-block-handle {
+  gap: 0;
+  transform: translateY(4px);
+}
+.milkdown .milkdown-block-handle .operation-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 22px;
+  padding: 0;
+}
+.milkdown .milkdown-block-handle .operation-item svg {
+  width: 16px;
+  height: 16px;
+}
+/* The move button (2nd/last item; the 1st is "add") drags blocks — show a grab
+   cursor on hover and a closed hand while held. */
+.milkdown .milkdown-block-handle .operation-item:last-child {
+  cursor: grab;
+}
+.milkdown .milkdown-block-handle .operation-item:last-child:active {
+  cursor: grabbing;
+}
+
 /* Block handle (+ / drag) icons darken on hover for clear affordance. */
 .milkdown .milkdown-block-handle .operation-item:hover svg {
   fill: var(--text);

@@ -14,6 +14,7 @@
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-edge: var(--edge);
   --color-accent: var(--accent);
   --color-btn-bg: var(--btn-bg);
   --color-btn-fg: var(--btn-fg);
@@ -33,6 +34,10 @@
   --text: #000000;
   --muted: #666666;
   --line: #eaeaea;
+  /* Hairline edge for floating surfaces (the sheet). Semi-transparent so it
+     darkens/lightens whatever sits behind it — a crisp edge on any backdrop,
+     the way Minshot keeps its editor window readable over any wallpaper. */
+  --edge: rgba(0, 0, 0, 0.12);
   --accent: #000000;
   /* Primary button — soft charcoal rather than pure black */
   --btn-bg: #333333;
@@ -66,6 +71,7 @@
     --text: #ededed;
     --muted: #888888;
     --line: #2a2a2a;
+    --edge: rgba(255, 255, 255, 0.14);
     --accent: #ffffff;
     --btn-bg: #e5e5e5;
     --btn-fg: #111111;
@@ -83,6 +89,7 @@
   --text: #ededed;
   --muted: #888888;
   --line: #2a2a2a;
+  --edge: rgba(255, 255, 255, 0.14);
   --accent: #ffffff;
   --btn-bg: #e5e5e5;
   --btn-fg: #111111;

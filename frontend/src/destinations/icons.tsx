@@ -221,6 +221,10 @@ export const EditIcon: ReactNode = lineIcon(
   </>,
 )
 
+/* Chevrons for menu drill-in (Settings submenu). */
+export const ChevronRightIcon: ReactNode = lineIcon(<path d="M9 6l6 6-6 6" />)
+export const ChevronLeftIcon: ReactNode = lineIcon(<path d="M15 6l-6 6 6 6" />)
+
 // ---- Image-host icons ----
 export const SparklesIcon = solid('M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z')
 
